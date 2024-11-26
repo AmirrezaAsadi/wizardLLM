@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Home, Users, Wand2, Bell, Settings } from 'lucide-react';
+import { Home, Wand2, Bell, Settings } from 'lucide-react';
 
 export default function App() {
   const [devices] = useState([
