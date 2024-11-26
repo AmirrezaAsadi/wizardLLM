@@ -1,155 +1,115 @@
-// src/App.jsx
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Home, Users, ScrollText, Activity } from 'lucide-react'
+import { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Home, Users, Wand2, Bell, Settings } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('devices')
+  const [devices] = useState([
+    { id: 1, name: 'Living Room Light', status: 'On', type: 'Light' },
+    { id: 2, name: 'Temperature Sensor', status: '72°F', type: 'Sensor' },
+    { id: 3, name: 'Front Door', status: 'Locked', type: 'Lock' }
+  ]);
+
+  const [rules] = useState([
+    { id: 1, name: 'Night Mode', condition: 'Time is after 10 PM', action: 'Turn off lights' },
+    { id: 2, name: 'Morning Routine', condition: 'Time is 7 AM', action: 'Open blinds, turn on coffee maker' }
+  ]);
+
+  const [events] = useState([
+    { id: 1, time: '10:30 AM', description: 'Front door unlocked', device: 'Front Door' },
+    { id: 2, time: '11:15 AM', description: 'Temperature adjusted', device: 'Thermostat' }
+  ]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-[#B33F62] p-4">
-        <h1 className="text-[#EFD9CE] text-2xl font-bold">Wizard of LLMs</h1>
+    <div className="min-h-screen bg-slate-100">
+      <nav className="bg-[#B33F62] p-4 shadow-lg">
+        <div className="container mx-auto flex items-center justify-between">
+          <h1 className="text-[#EFD9CE] text-2xl font-bold">Wizard of LLMs</h1>
+        </div>
       </nav>
 
       <main className="container mx-auto p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>AI Assistant Control Panel</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="assistants" className="flex items-center gap-2">
-                  <Home className="h-4 w-4" />
-                  Assistants
-                </TabsTrigger>
-                <TabsTrigger value="prompts" className="flex items-center gap-2">
-                  <ScrollText className="h-4 w-4" />
-                  Prompts
-                </TabsTrigger>
-                <TabsTrigger value="people" className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  People
-                </TabsTrigger>
-                <TabsTrigger value="conversations" className="flex items-center gap-2">
-                  <Activity className="h-4 w-4" />
-                  Conversations
-                </TabsTrigger>
-              </TabsList>
+        <Tabs defaultValue="devices" className="space-y-4">
+          <TabsList className="grid grid-cols-4 gap-4 bg-white p-2">
+            <TabsTrigger value="devices" className="flex items-center gap-2">
+              <Home className="h-4 w-4" /> Devices
+            </TabsTrigger>
+            <TabsTrigger value="rules" className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4" /> Rules
+            </TabsTrigger>
+            <TabsTrigger value="events" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" /> Events
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" /> Settings
+            </TabsTrigger>
+          </TabsList>
 
-              <TabsContent value="assistants">
-                <AssistantsList />
-              </TabsContent>
-              <TabsContent value="prompts">
-                <PromptsList />
-              </TabsContent>
-              <TabsContent value="people">
-                <PeopleList />
-              </TabsContent>
-              <TabsContent value="conversations">
-                <ConversationsList />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+          <TabsContent value="devices">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {devices.map(device => (
+                <Card key={device.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{device.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600">Status: {device.status}</p>
+                    <p className="text-gray-600">Type: {device.type}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="rules">
+            <div className="grid gap-4 md:grid-cols-2">
+              {rules.map(rule => (
+                <Card key={rule.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{rule.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600">If: {rule.condition}</p>
+                    <p className="text-gray-600">Then: {rule.action}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="events">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Events</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {events.map(event => (
+                    <div key={event.id} className="flex items-center justify-between border-b pb-2">
+                      <div>
+                        <p className="font-medium">{event.description}</p>
+                        <p className="text-sm text-gray-600">{event.device}</p>
+                      </div>
+                      <span className="text-sm text-gray-500">{event.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Configure your Wizard of LLMs settings here.</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
-  )
-}
-
-// Basic list components
-function AssistantsList() {
-  const assistants = [
-    { id: 1, name: 'Claude', type: 'General Purpose', status: 'Active' },
-    { id: 2, name: 'GPT-4', type: 'Analysis', status: 'Active' },
-    { id: 3, name: 'DALL-E', type: 'Image Generation', status: 'Inactive' }
-  ]
-  
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {assistants.map(assistant => (
-        <Card key={assistant.id}>
-          <CardHeader>
-            <CardTitle>{assistant.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Type: {assistant.type}</p>
-            <p>Status: {assistant.status}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
-
-function PromptsList() {
-  const prompts = [
-    { id: 1, title: 'Analysis Template', category: 'Business' },
-    { id: 2, title: 'Creative Writing', category: 'Content' },
-    { id: 3, title: 'Code Review', category: 'Development' }
-  ]
-  
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {prompts.map(prompt => (
-        <Card key={prompt.id}>
-          <CardHeader>
-            <CardTitle>{prompt.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Category: {prompt.category}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
-
-function PeopleList() {
-  const people = [
-    { id: 1, name: 'John Doe', role: 'Admin' },
-    { id: 2, name: 'Jane Smith', role: 'User' },
-    { id: 3, name: 'Bob Wilson', role: 'Developer' }
-  ]
-  
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {people.map(person => (
-        <Card key={person.id}>
-          <CardHeader>
-            <CardTitle>{person.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Role: {person.role}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
-
-function ConversationsList() {
-  const conversations = [
-    { id: 1, title: 'Project Analysis', assistant: 'Claude', date: '2024-11-26' },
-    { id: 2, title: 'Code Review', assistant: 'GPT-4', date: '2024-11-26' },
-    { id: 3, title: 'Content Creation', assistant: 'Claude', date: '2024-11-25' }
-  ]
-  
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {conversations.map(conversation => (
-        <Card key={conversation.id}>
-          <CardHeader>
-            <CardTitle>{conversation.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Assistant: {conversation.assistant}</p>
-            <p>Date: {conversation.date}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
+  );
 }
